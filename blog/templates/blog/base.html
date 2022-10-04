@@ -1,0 +1,136 @@
+<!-- template inheritance -->
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if title %}
+    <title>Django Blog - {{title}}</title>
+    {% else %}
+    <title>Django Blog</title>
+    {% endif %}
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'blog/main.css' %}">
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/ec2fe48e81.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <header class="site-header">
+
+        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+            <div class="container">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <a class="navbar-brand mr-4" href="{% url 'blog-home' %}">Django Blog</a>
+
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="navbar-nav mr-auto">
+                        <a class="nav-item nav-link" href="{% url 'blog-home' %}">Home</a>
+                        <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
+                    </div>
+                    <!-- Navbar Right Side -->
+                    <div class="navbar-nav ms-auto">
+                        {% if user.is_authenticated %}
+                        <a class="nav-item nav-link" href="{% url 'post-create' %}">New Post</a>
+                        <!-- <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a> -->
+
+
+                        <!-- <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a> -->
+                        {% else %}
+                        <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                        <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                        {% endif %}
+                        <!-- <a class="nav-item nav-link" href="admin/">Admin</a> -->
+                    </div>
+                </div>
+
+                <div class="nav-item dropdown">
+                    {% if user.is_authenticated %}
+                    <button type="button" class="btn btn-outline-link nav-link py-2 px-0 px-lg-2 dropdown-toggle"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
+                        <span class="d-lg-none" aria-hidden="true"></span> <img class="rounded-circle profile-img"
+                            src="{{ user.profile.image.url }}">
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <!-- <a class="dropdown-item" aria-current="true" href="{% url 'profile' %}">Profile</a> -->
+                            <a class="dropdown-item" aria-current="true" href="{% url 'profile' %}">{{ user.username }}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'post-create' %}">New Post</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- <div class="add-new-post-icon fixed-bottom">
+        {% if user.is_authenticated %}
+        <i class="fa-solid fa-circle-plus"></i>
+        {% endif %}
+    </div> -->
+
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                
+                {% block content %}
+                {% endblock %}
+            </div>
+            <div class="col-md-4">
+                <div class="content-section">
+                    <h3>Our Sidebar</h3>
+                    <p class='text-muted'>You can put any information here you'd like.
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-light">Latest Posts</li>
+                        <li class="list-group-item list-group-item-light">Announcements</li>
+                        <li class="list-group-item list-group-item-light">Calendars</li>
+                        <li class="list-group-item list-group-item-light">etc</li>
+                    </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
